@@ -76,6 +76,33 @@ app.get('/items/:id1/:id2', function (req, res) {
                  res.send("Range not possible");
 })
 
+app.get('/properties', function (req, res) {
+         res.header("Access-Control-Allow-Origin", "*");
+         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+         var object = jsonArray[0];
+         var properties = [];
+         for (var key in object)
+         {
+                 properties.push(key);
+         }
+         res.send(properties);
+})
+
+app.get('/properties/:num', function (req, res) {
+         res.header("Access-Control-Allow-Origin", "*");
+         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+         var object = jsonArray[0];
+         var properties = [];
+         for (var key in object)
+         {
+                 properties.push(key);
+         }
+         if (req.params.num > 0 && req.params.num < 15)
+                 res.send(properties[req.params.num-1]);
+         else
+                 res.send("No such property.");
+})
+
 // DO NOT CHANGE!
 // bind server to port
 var server = app.listen(3000, function () {
