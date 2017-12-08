@@ -43,8 +43,13 @@ app.get('/items', function (req, res) {
 app.get('/items/:id', function (req, res) {
          res.header("Access-Control-Allow-Origin", "*");
          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-         var response = jsonArray[req.params.id-1];
-         res.send(response);
+         if (req.params.id <= 0 || req.params.id > 24)
+                 res.send("No such id {" +req.params.id+ "} in databse");
+         else
+         {
+                 var response = jsonArray[req.params.id-1];
+                 res.send(response);
+         }
 })
 
 // DO NOT CHANGE!

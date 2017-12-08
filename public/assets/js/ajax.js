@@ -1,5 +1,4 @@
 $(window).on('load', function() {
-         alert("Hello");
          $.ajax({
                  type: 'GET',
                  url: 'http://localhost:3000/items',
@@ -14,7 +13,7 @@ $(window).on('load', function() {
                                  var td4="<td>"+data[i]["cell phones per 100"]+"</td>";
                                  var td5="<td>"+data[i]["children per woman"]+"</td>";
                                  var td6="<td>"+data[i]["electricity consumption per capita"]+"</td>";
-                                 var td7="<td>"+data[i]["internet user per 100"]+"</td></tr>";
+                                 var td7="<td>"+[i]["internet user per 100"]+"</td></tr>";
                                  /*var td8="<td>"+obj[i]["id"]+"</td>";
                                  var td9="<td>"+obj[i]["id"]+"</td>";
                                  var td10="<td>"+obj[i]["id"]+"</td>";
