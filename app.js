@@ -103,6 +103,14 @@ app.get('/properties/:num', function (req, res) {
                  res.send("No such property.");
 })
 
+// POST
+
+app.post('/items', function (req, res) {
+         jsonArray.push(req.body);
+         console.log(req.body);
+         res.send("Added country {name} to list!");
+})
+
 // DO NOT CHANGE!
 // bind server to port
 var server = app.listen(3000, function () {

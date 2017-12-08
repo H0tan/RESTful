@@ -13,7 +13,7 @@ $(window).on('load', function() {
                                  var td4="<td>"+data[i]["cell phones per 100"]+"</td>";
                                  var td5="<td>"+data[i]["children per woman"]+"</td>";
                                  var td6="<td>"+data[i]["electricity consumption per capita"]+"</td>";
-                                 var td7="<td>"+[i]["internet user per 100"]+"</td></tr>";
+                                 var td7="<td>"+data[i]["internet user per 100"]+"</td></tr>";
                                  /*var td8="<td>"+obj[i]["id"]+"</td>";
                                  var td9="<td>"+obj[i]["id"]+"</td>";
                                  var td10="<td>"+obj[i]["id"]+"</td>";
@@ -27,6 +27,21 @@ $(window).on('load', function() {
 
                  }
     });
+    alert("hello");
+    var data = {};
+    data.id = "77";
+    data.name = "Greece";
+    $.ajax({
+                 type: 'POST',
+                 url: 'http://localhost:3000/items',
+                 contentType: 'application/json',
+                 data: JSON.stringify(data),
+                 success: function(data) {
+                         alert(data);
+                 },
+                 error: function(jqXHR, text, err) {
+                         alert("error");
+                 }
+    });
 });
-
 
