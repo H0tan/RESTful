@@ -57,17 +57,23 @@ app.get('/items/:id1/:id2', function (req, res) {
          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
          if (req.params.id1 < req.params.id2) // id1 < id2
          {
-                 if (req.params.id1 > 0 || req.params.id1 < 25 && req.params.id2 > 0 || req.params.id2 < 25) // Test, ob IDs in Range sind
+                 if (req.params.id1 > 0 && req.params.id1 < 25 && req.params.id2 > 0 && req.params.id2 < 25)
                  {
-                         
+                         var responseArray = [];
+                         var j = req.params.id1;
+                         for(j;j<=req.params.id2;j++)
+                         {
+                                 item = jsonArray[j-1];
+                                 responseArray.push(item);
+                         }
+                         res.send(responseArray);
                  }
                  else
-                         res.send("No such id {" +req.params.id1+ " , " +req.params.id2+ "} in databse");
+                         res.send("No such id {" +req.params.id1+ "," +req.params.id2+ "} in databse");
 
          }
          else
                  res.send("Range not possible");
-
 })
 
 // DO NOT CHANGE!
