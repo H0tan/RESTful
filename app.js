@@ -53,6 +53,7 @@ app.get('/items/:id', function (req, res) {
                  if (i == jsonArray.length)
                  {
                          res.send("No such id {" +req.params.id+ "} in databse");
+                         // Schleige verlassen
                          break;
                  }
                  // ID in Array mit übergebener ID vergleichen
@@ -61,6 +62,7 @@ app.get('/items/:id', function (req, res) {
                          // ID gefunden --> Antwort senden
                          var response = jsonArray[i];
                          res.send(response);
+                         // Schleige verlassen
                          break;
                  }
 
@@ -69,29 +71,36 @@ app.get('/items/:id', function (req, res) {
 
 app.get('/items/:id1/:id2', function (req, res) {
          // Zum Testen -- Cross Origin Policy umgehen
-         //res.header("Access-Control-Allow-Origin", "*");
-         //res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+         res.header("Access-Control-Allow-Origin", "*");
+         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
          var responseArray = [];
+         // Iteration über Array
          for (var i=0; i<jsonArray.length; i++)
          {
+                 // Abfangen der Grenzen
                  if (req.params.id1 <= 0 && req.params.id2 <= jsonArray.length)
                  {
+                         // Fehler
                          res.send("Range not possible");
                          break;
                  }
+                 // Vergleich IDs
                  if (parseInt(jsonArray[i]["id"]) == req.params.id1)
                  {
+                         // wenn ID1 gefunden, dann Objekt in neues Array pushen
                          var item = jsonArray[i];
                          responseArray.push(item);
                          i++;
+                         // Abruch (Range beachten)
                          if (i >= jsonArray.length)
                          {
                                  res.send("Range not possible");
                                  break;
                          }
-
+                         // bis ID2 Objekte auf Antwortarray pushen
                          while (parseInt(jsonArray[i]["id"]) != req.params.id2)
                          {
+                                 // Range..
                                  if (i >= jsonArray.length)
                                  {
                                          res.send("Range not possible");
@@ -101,9 +110,11 @@ app.get('/items/:id1/:id2', function (req, res) {
                                  responseArray.push(item);
                                  i++;
                          }
+                         // letztes Objekt mit ID2 pushen
                          item = jsonArray[i];
                          responseArray.push(item);
                          i++;
+                         // Antwort senden
                          res.send(responseArray);
                  }
          }
@@ -112,12 +123,15 @@ app.get('/items/:id1/:id2', function (req, res) {
 app.get('/properties', function (req, res) {
          res.header("Access-Control-Allow-Origin", "*");
          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+         // Properties aus Array holen
          var object = jsonArray[0];
          var properties = [];
+         // einzelne Keys in Array pushen
          for (var key in object)
          {
                  properties.push(key);
          }
+         // Antwort senden
          res.send(properties);
 })
 
@@ -130,6 +144,7 @@ app.get('/properties/:num', function (req, res) {
          {
                  properties.push(key);
          }
+         // Einschränkungen fpür num beachten und bei True geforderte property zurückgeben
          if (req.params.num > 0 && req.params.num < 15)
                  res.send(properties[req.params.num-1]);
          else
@@ -138,9 +153,15 @@ app.get('/properties/:num', function (req, res) {
 
 // POST
 app.post('/items', function (req, res) {
-         jsonArray.push(req.body);
-         for (var key in req.body)
+         // neues Objekt
+         var obj = req.body;
+         // IDs fprtführend vergeben
+         obj.id = (jsonArray.length+1).toString();
+         // erstelltes Objekt in Array pushen
+         jsonArray.push(obj);
+         for (var key in obj)
          {
+                 // name suchen udn zurückgeben
                  if (key == "name")
                          res.send("Added country {" +req.body[key]+ "} to list!");
          }
@@ -149,6 +170,7 @@ app.post('/items', function (req, res) {
 
 // DELETE
 app.delete('/items', function (req, res) {
+         // löschen letztes Objekt
          var deleted = jsonArray.pop();
          res.header("Access-Control-Allow-Origin", "*");
          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -156,8 +178,23 @@ app.delete('/items', function (req, res) {
 })
 
 app.delete('/items/:id', function (req, res) {
-         var deleted = jsonArray.pop();
-         res.send("Deleted last country: {" +deleted["name"]+ "}");
+         for (var i=0; i<=jsonArray.length; i++)
+         {
+                 // ID nicht gefunden --> Fehler
+                 if (i == jsonArray.length)
+                 {
+                         res.send("No such id {" +req.params.id+ "} in databse");
+                         break;
+                 }
+                 if (parseInt(jsonArray[i]["id"]) == req.params.id)
+                 {
+                         // ID gefunden --> löschen
+                         jsonArray.splice(i, 1);
+                         res.send("Item {" +req.params.id+ "} deleted successfully");
+                         break;
+                 }
+
+         }
 })
 
 // DO NOT CHANGE!

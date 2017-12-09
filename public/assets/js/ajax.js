@@ -29,11 +29,10 @@ $(window).on('load', function() {
     });
     alert("hello");
     var data = {};
-    data.id = "77";
-    data.name = "Greece";
+    data.id = 5;
     $.ajax({
                  type: 'DELETE',
-                 url: 'http://localhost:3000/items',
+                 url: 'http://localhost:3000/items/5',
                  contentType: 'application/json',
                  //data: JSON.stringify(data),
                  success: function(data) {
