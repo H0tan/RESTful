@@ -32,10 +32,10 @@ $(window).on('load', function() {
     data.id = "77";
     data.name = "Greece";
     $.ajax({
-                 type: 'POST',
+                 type: 'DELETE',
                  url: 'http://localhost:3000/items',
                  contentType: 'application/json',
-                 data: JSON.stringify(data),
+                 //data: JSON.stringify(data),
                  success: function(data) {
                          alert(data);
                  },
@@ -44,4 +44,3 @@ $(window).on('load', function() {
                  }
     });
 });
-

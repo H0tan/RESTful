@@ -35,45 +35,78 @@ csv()
 
 // GET
 app.get('/items', function (req, res) {
+         // Zum Testen -- Cross Origin Policy umgehen
          res.header("Access-Control-Allow-Origin", "*");
          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+         // Sende komplettes Array an Client
          res.send(jsonArray);
 })
 
 app.get('/items/:id', function (req, res) {
+         // Zum Testen -- Cross Origin Policy umgehen
          res.header("Access-Control-Allow-Origin", "*");
          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-         if (req.params.id <= 0 || req.params.id > 24)
-                 res.send("No such id {" +req.params.id+ "} in databse");
-         else
+         // Iteration über gesamtes Array
+         for (var i=0; i<=jsonArray.length; i++)
          {
-                 var response = jsonArray[req.params.id-1];
-                 res.send(response);
+                 // ID nicht gefunden --> Fehler
+                 if (i == jsonArray.length)
+                 {
+                         res.send("No such id {" +req.params.id+ "} in databse");
+                         break;
+                 }
+                 // ID in Array mit übergebener ID vergleichen
+                 if (parseInt(jsonArray[i]["id"]) == req.params.id)
+                 {
+                         // ID gefunden --> Antwort senden
+                         var response = jsonArray[i];
+                         res.send(response);
+                         break;
+                 }
+
          }
 })
 
 app.get('/items/:id1/:id2', function (req, res) {
-         res.header("Access-Control-Allow-Origin", "*");
-         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-         if (req.params.id1 < req.params.id2) // id1 < id2
+         // Zum Testen -- Cross Origin Policy umgehen
+         //res.header("Access-Control-Allow-Origin", "*");
+         //res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+         var responseArray = [];
+         for (var i=0; i<jsonArray.length; i++)
          {
-                 if (req.params.id1 > 0 && req.params.id1 < 25 && req.params.id2 > 0 && req.params.id2 < 25)
+                 if (req.params.id1 <= 0 && req.params.id2 <= jsonArray.length)
                  {
-                         var responseArray = [];
-                         var j = req.params.id1;
-                         for(j;j<=req.params.id2;j++)
+                         res.send("Range not possible");
+                         break;
+                 }
+                 if (parseInt(jsonArray[i]["id"]) == req.params.id1)
+                 {
+                         var item = jsonArray[i];
+                         responseArray.push(item);
+                         i++;
+                         if (i >= jsonArray.length)
                          {
-                                 item = jsonArray[j-1];
-                                 responseArray.push(item);
+                                 res.send("Range not possible");
+                                 break;
                          }
+
+                         while (parseInt(jsonArray[i]["id"]) != req.params.id2)
+                         {
+                                 if (i >= jsonArray.length)
+                                 {
+                                         res.send("Range not possible");
+                                         break;
+                                 }
+                                 item = jsonArray[i];
+                                 responseArray.push(item);
+                                 i++;
+                         }
+                         item = jsonArray[i];
+                         responseArray.push(item);
+                         i++;
                          res.send(responseArray);
                  }
-                 else
-                         res.send("No such id {" +req.params.id1+ "," +req.params.id2+ "} in databse");
-
          }
-         else
-                 res.send("Range not possible");
 })
 
 app.get('/properties', function (req, res) {
@@ -104,11 +137,27 @@ app.get('/properties/:num', function (req, res) {
 })
 
 // POST
-
 app.post('/items', function (req, res) {
          jsonArray.push(req.body);
-         console.log(req.body);
-         res.send("Added country {name} to list!");
+         for (var key in req.body)
+         {
+                 if (key == "name")
+                         res.send("Added country {" +req.body[key]+ "} to list!");
+         }
+
+})
+
+// DELETE
+app.delete('/items', function (req, res) {
+         var deleted = jsonArray.pop();
+         res.header("Access-Control-Allow-Origin", "*");
+         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+         res.send("Deleted last country: {" +deleted["name"]+ "}");
+})
+
+app.delete('/items/:id', function (req, res) {
+         var deleted = jsonArray.pop();
+         res.send("Deleted last country: {" +deleted["name"]+ "}");
 })
 
 // DO NOT CHANGE!
